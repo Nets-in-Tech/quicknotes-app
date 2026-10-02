@@ -1,0 +1,304 @@
+/* ==========================================
+   1. Universal Reset & Base Styles
+   ========================================== */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.6;
+    background-color: #f4f6f8;
+    color: #333333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* ==========================================
+   2. Coloured Header & Footer
+   ========================================== */
+header {
+    background-color: #2c3e50;
+    color: #ffffff;
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+header h1 {
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+}
+
+header p {
+    color: #ecf0f1;
+    font-size: 1rem;
+}
+
+footer {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    font-size: 0.9rem;
+    margin-top: auto;
+}
+
+/* ==========================================
+   3. Main Centred Column (Max 700px) & White Section Cards
+   ========================================== */
+main {
+    max-width: 700px;
+    width: 100%;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.card-section {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.card-section h2 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #eef2f5;
+    padding-bottom: 0.5rem;
+}
+
+/* ==========================================
+   4. Flexbox Form Layout
+   ========================================== */
+#note-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 180px;
+}
+
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 0.4rem;
+}
+
+#note-input,
+#note-category,
+#search-input {
+    padding: 0.75rem;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: inherit;
+    width: 100%;
+}
+
+#note-input:focus,
+#note-category:focus,
+#search-input:focus {
+    outline: 2px solid #008080;
+}
+
+/* Red Error Message */
+#error-message {
+    color: #e74c3c;
+    font-weight: bold;
+    margin-top: 0.75rem;
+    min-height: 1.2rem;
+}
+
+.controls-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.search-group {
+    flex: 1;
+    min-width: 180px;
+}
+
+#note-count {
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: #555555;
+}
+
+/* ==========================================
+   5. Buttons with Visible Hover Effect
+   ========================================== */
+button {
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #008080;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+button:hover {
+    background-color: #005656;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+button.btn-danger {
+    background-color: #8b0000;
+}
+
+button.btn-danger:hover {
+    background-color: #5c0000;
+}
+
+/* ==========================================
+   6. Note Cards & Category Styling
+   ========================================== */
+#notes-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.note-card {
+    padding: 1rem 1.25rem;
+    border-radius: 6px;
+    border-left: 6px solid #cccccc;
+    background-color: #ffffff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    border-top: 1px solid #eeeeee;
+    border-right: 1px solid #eeeeee;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.note-content {
+    flex: 1;
+}
+
+.note-text {
+    font-size: 1.05rem;
+    color: #2c3e50;
+    word-break: break-word;
+    margin-bottom: 0.5rem;
+}
+
+.note-meta {
+    font-size: 0.8rem;
+    color: #777777;
+}
+
+.note-category-badge {
+    display: inline-block;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-right: 0.5rem;
+}
+
+/* Category Left-Border Colors */
+.note-card.category-personal {
+    border-left-color: #008080;
+    /* Teal */
+    background-color: #f2fbfb;
+}
+
+.note-card.category-personal .note-category-badge {
+    background-color: #008080;
+    color: #ffffff;
+}
+
+.note-card.category-work {
+    border-left-color: #8b0000;
+    /* Dark Red */
+    background-color: #fdf5f5;
+}
+
+.note-card.category-work .note-category-badge {
+    background-color: #8b0000;
+    color: #ffffff;
+}
+
+.note-card.category-study {
+    border-left-color: #2b6cb0;
+    /* Blue */
+    background-color: #f0f5fa;
+}
+
+.note-card.category-study .note-category-badge {
+    background-color: #2b6cb0;
+    color: #ffffff;
+}
+
+/* ==========================================
+   7. Responsive Media Query (<= 600px)
+   ========================================== */
+@media (max-width: 600px) {
+    #note-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .form-group {
+        width: 100%;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    .controls-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .note-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .note-card button {
+        align-self: flex-end;
+        width: auto;
+        padding: 0.5rem 0.8rem;
+        font-size: 0.85rem;
+    }
+}
