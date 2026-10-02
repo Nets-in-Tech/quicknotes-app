@@ -4,20 +4,41 @@
 const noteForm = document.querySelector("#note-form");
 const noteInput = document.querySelector("#note-input");
 const noteCategory = document.querySelector("#note-category");
+const searchInput = document.querySelector("#search-input");
 const notesList = document.querySelector("#notes-list");
 const noteCount = document.querySelector("#note-count");
 const errorMessage = document.querySelector("#error-message");
+const clearAllBtn = document.querySelector("#clear-all-btn");
 
 // ==========================================
-// 2. Notes Array State
+// 2. Notes State
 // ==========================================
 let notes = [];
 
 // ==========================================
-// 3. Update Dynamic Note Count
+// 3. Persistence (Task 5)
 // ==========================================
-function updateNoteCount() {
-    const count = notes.length;
+function saveNotes() {
+    localStorage.setItem("quicknotes_data", JSON.stringify(notes));
+}
+
+function loadNotes() {
+    const data = localStorage.getItem("quicknotes_data");
+    if (data) {
+        try {
+            notes = JSON.parse(data);
+        } catch (e) {
+            console.error("Error reading localStorage:", e);
+            notes = [];
+        }
+    }
+}
+
+// ==========================================
+// 4. Update Dynamic Note Count
+// ==========================================
+function updateNoteCount(displayedCount) {
+    const count = displayedCount !== undefined ? displayedCount : notes.length;
     if (count === 0) {
         noteCount.textContent = "You have no notes yet.";
     } else if (count === 1) {
@@ -28,13 +49,31 @@ function updateNoteCount() {
 }
 
 // ==========================================
-// 4. Render Function
+// 5. Render Function (Task 5 Search Integration)
 // ==========================================
-function render() {
+function render(filterWord = "") {
     // Clear list safely without innerHTML
     notesList.textContent = "";
 
-    notes.forEach((note) => {
+    const searchTerm = filterWord.trim().toLowerCase();
+    const filteredNotes = notes.filter((note) =>
+        note.text.toLowerCase().includes(searchTerm)
+    );
+
+    // Search finding nothing check
+    if (filteredNotes.length === 0) {
+        if (notes.length > 0 && searchTerm !== "") {
+            const emptyLi = document.createElement("li");
+            emptyLi.className = "no-notes-msg";
+            emptyLi.textContent = "No notes match your search.";
+            notesList.appendChild(emptyLi);
+        }
+        updateNoteCount(0);
+        return;
+    }
+
+    // Render matching note cards
+    filteredNotes.forEach((note) => {
         const li = document.createElement("li");
         li.className = `note-card category-${note.category}`;
 
@@ -73,11 +112,11 @@ function render() {
         notesList.appendChild(li);
     });
 
-    updateNoteCount();
+    updateNoteCount(filteredNotes.length);
 }
 
 // ==========================================
-// 5. Form Submission Logic & Validation
+// 6. Form Submission Logic & Validation
 // ==========================================
 function addNote(event) {
     event.preventDefault();
@@ -85,7 +124,7 @@ function addNote(event) {
     const textValue = noteInput.value.trim();
     const categoryValue = noteCategory.value;
 
-    // Validation 1: Blank input / empty spaces
+    // Validation 1: Blank input
     if (textValue === "") {
         errorMessage.textContent = "Please type a note first.";
         return;
@@ -97,7 +136,6 @@ function addNote(event) {
         return;
     }
 
-    // Clear error message when input is valid
     errorMessage.textContent = "";
 
     const newNote = {
@@ -114,20 +152,45 @@ function addNote(event) {
     };
 
     notes.unshift(newNote);
-    render();
+    saveNotes();
+    render(searchInput.value);
 
     noteInput.value = "";
 }
 
 // ==========================================
-// 6. Delete Note Logic
+// 7. Delete Note & Clear All
 // ==========================================
 function deleteNote(id) {
     notes = notes.filter((note) => note.id !== id);
-    render();
+    saveNotes();
+    render(searchInput.value);
+}
+
+function clearAllNotes() {
+    if (notes.length === 0) return;
+
+    if (confirm("Delete all notes?")) {
+        notes = [];
+        saveNotes();
+        render();
+    }
 }
 
 // ==========================================
-// 7. Event Listener setup
+// 8. Event Listeners & Startup
 // ==========================================
 noteForm.addEventListener("submit", addNote);
+
+searchInput.addEventListener("input", (e) => {
+    render(e.target.value);
+});
+
+clearAllBtn.addEventListener("click", clearAllNotes);
+
+function init() {
+    loadNotes();
+    render();
+}
+
+init();
